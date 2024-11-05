@@ -26,6 +26,7 @@
 - **`migrations/`**: Stores SQL migrations for setting up the PostgreSQL database.
 - **`scripts/`**: Stores scripts for setting up **only the database** or **app and database** with Docker Compose.
 - **`templates/`**: Stores the template for the `/home` view.
+- **`tests/`**: API endpoint tests.
 - **`Dockerfile`**: Optimized Docker image for the app.
 - **`docker-compose.yml`**: Sets up the application **with the database**.
 
@@ -95,4 +96,14 @@ You can adjust the configuration dynamically. For example, assuming `configurati
 
 ## Tests
 
-**Work in Progress**
+To run tests you must have running database in the container. All you need to do is first run
+
+```bash
+./scripts/init_db.sh
+```
+
+and then 
+
+```bash
+cargo test
+```

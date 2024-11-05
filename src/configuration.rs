@@ -4,13 +4,13 @@ use serde_aux::prelude::deserialize_number_from_string;
 use sqlx::postgres::PgConnectOptions;
 use std::path::PathBuf;
 
-#[derive(Deserialize)]
+#[derive(Clone, Deserialize)]
 pub struct Settings {
     pub database: DatabaseSettings,
     pub application: ApplicationSettings,
 }
 
-#[derive(Deserialize)]
+#[derive(Clone, Deserialize)]
 pub struct DatabaseSettings {
     pub username: String,
     pub password: String,
@@ -19,7 +19,7 @@ pub struct DatabaseSettings {
     pub db_name: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Clone, Deserialize)]
 pub struct ApplicationSettings {
     pub host: String,
     #[serde(deserialize_with = "deserialize_number_from_string")]

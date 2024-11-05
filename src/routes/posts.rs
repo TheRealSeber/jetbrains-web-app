@@ -6,16 +6,15 @@ use std::{
 };
 
 use crate::{
-    domain::{
-        save_post, ALLOWED_IMAGE_TYPE, MAX_FILE_SIZE, MAX_TEXT_LENGTH, MIN_TEXT_LENGTH, USERNAME_RE,
-    },
+    domain::{save_post, ALLOWED_IMAGE_TYPE, MAX_TEXT_LENGTH, MIN_TEXT_LENGTH, USERNAME_RE},
     startup::AppState,
 };
 use axum::{
     extract::{Multipart, State},
-    response::{IntoResponse, Redirect},
+    response::IntoResponse,
 };
-use hyper::header;
+use hyper::{header, StatusCode};
+use image::guess_format;
 use reqwest::Client;
 use tracing::warn;
 use uuid::Uuid;
@@ -153,7 +152,11 @@ pub async fn create_post(
 
     cleanup_guard.dismiss();
 
-    Ok(Redirect::to("/home"))
+    Ok((
+        StatusCode::SEE_OTHER,
+        [(header::LOCATION, "/home")],
+        "Redirecting to /home",
+    ))
 }
 
 #[tracing::instrument(name = "Saving image to disk", skip(data))]
@@ -185,25 +188,13 @@ async fn download_and_save_avatar(
         )));
     }
 
-    let content_type = response
-        .headers()
-        .get(header::CONTENT_TYPE)
-        .and_then(|v| v.to_str().ok())
-        .unwrap_or("");
-
-    if ALLOWED_IMAGE_TYPE != content_type {
-        return Err(CreatePostError::AvatarDownloadError(
-            "Invalid avatar image type".to_string(),
-        ));
-    }
-
     let bytes = response
         .bytes()
         .await
         .map_err(|e| CreatePostError::AvatarDownloadError(e.to_string()))?;
 
-    if bytes.len() > MAX_FILE_SIZE {
-        return Err(CreatePostError::FileTooLarge);
+    if guess_format(&bytes).ok() != Some(ALLOWED_IMAGE_TYPE) {
+        return Err(CreatePostError::InvalidFileType);
     }
 
     save_image(&bytes, path).await?;
@@ -269,21 +260,11 @@ async fn process_multipart_fields(
                 }
             }
             "image" => {
-                if field.file_name().is_none() || field.file_name().unwrap().is_empty() {
-                    continue;
-                }
-                if let Some(content_type) = field.content_type() {
-                    if ALLOWED_IMAGE_TYPE != content_type {
-                        return Err(CreatePostError::InvalidFileType);
-                    }
-                }
-
                 let data = field.bytes().await.map_err(|e| {
                     CreatePostError::ValidationError(format!("Failed to read image data: {}", e))
                 })?;
-
-                if data.len() > MAX_FILE_SIZE {
-                    return Err(CreatePostError::FileTooLarge);
+                if guess_format(&data).ok() != Some(ALLOWED_IMAGE_TYPE) {
+                    return Err(CreatePostError::InvalidFileType);
                 }
 
                 if !data.is_empty() {

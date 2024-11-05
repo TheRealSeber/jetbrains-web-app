@@ -47,8 +47,8 @@ pub fn trace_layer_on_response(
     tracing::trace!("END");
 }
 
-pub fn initialize_tracing() -> Result<(), Box<dyn Error>> {
-    let filter = EnvFilter::try_from_default_env().or_else(|_| EnvFilter::try_new("trace"))?;
+pub fn initialize_tracing(env_filter: &str) -> Result<(), Box<dyn Error>> {
+    let filter = EnvFilter::try_from_default_env().or_else(|_| EnvFilter::try_new(env_filter))?;
 
     tracing_subscriber::registry()
         .with(filter)

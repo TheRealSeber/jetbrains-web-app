@@ -1,14 +1,14 @@
 use chrono::{DateTime, Utc};
+use image::ImageFormat;
 use once_cell::sync::Lazy;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use sqlx::{Postgres, Transaction};
 use uuid::Uuid;
 
-pub const MAX_FILE_SIZE: usize = 5_000_000;
 pub const MAX_TEXT_LENGTH: u64 = 10000;
 pub const MIN_TEXT_LENGTH: u64 = 10;
-pub const ALLOWED_IMAGE_TYPE: &str = "image/png";
+pub const ALLOWED_IMAGE_TYPE: ImageFormat = ImageFormat::Png;
 
 pub static USERNAME_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"^[a-zA-Z0-9_-]{2,50}$").unwrap());
 
