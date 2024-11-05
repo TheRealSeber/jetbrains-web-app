@@ -191,8 +191,6 @@ async fn download_and_save_avatar(
         .and_then(|v| v.to_str().ok())
         .unwrap_or("");
 
-    tracing::trace!("Avatar content type: {}", content_type);
-
     if ALLOWED_IMAGE_TYPE != content_type {
         return Err(CreatePostError::AvatarDownloadError(
             "Invalid avatar image type".to_string(),
@@ -279,8 +277,6 @@ async fn process_multipart_fields(
                         return Err(CreatePostError::InvalidFileType);
                     }
                 }
-
-                tracing::info!("Field {:?}", field);
 
                 let data = field.bytes().await.map_err(|e| {
                     CreatePostError::ValidationError(format!("Failed to read image data: {}", e))
