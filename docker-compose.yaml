@@ -1,0 +1,31 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_DATABASE__HOST=db
+      - APP_DATABASE__PORT=5432
+      - APP_DATABASE__USERNAME=postgres
+      - APP_DATABASE__PASSWORD=postgres
+      - APP_DATABASE__DB_NAME=postgres
+      - APP_APPLICATION__HOST=0.0.0.0
+      - APP_APPLICATION__PORT=8000
+    volumes:
+      - ./uploads:/app/uploads
+    depends_on:
+      - db
+  db:
+    image: postgres:16.4
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations/20241105001129_blog-post.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  postgres_data:

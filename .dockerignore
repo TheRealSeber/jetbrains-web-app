@@ -1,0 +1,6 @@
+scripts/
+uploads/
+Dockerfile
+docker-compose.yaml
+README.md
+target/

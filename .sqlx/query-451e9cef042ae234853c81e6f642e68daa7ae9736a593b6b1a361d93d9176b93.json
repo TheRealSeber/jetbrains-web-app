@@ -1,0 +1,50 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT \n            id,\n            text,\n            published_at,\n            image_path,\n            username,\n            user_avatar_path\n        FROM blog_posts\n        ORDER BY published_at DESC\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "text",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "published_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 3,
+        "name": "image_path",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "username",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "user_avatar_path",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      true
+    ]
+  },
+  "hash": "451e9cef042ae234853c81e6f642e68daa7ae9736a593b6b1a361d93d9176b93"
+}

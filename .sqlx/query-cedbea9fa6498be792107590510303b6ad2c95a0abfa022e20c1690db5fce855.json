@@ -1,0 +1,18 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO blog_posts (\n            id,\n            text,\n            username,\n            image_path,\n            user_avatar_path\n        )\n        VALUES ($1, $2, $3, $4, $5)\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Text",
+        "Varchar",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "cedbea9fa6498be792107590510303b6ad2c95a0abfa022e20c1690db5fce855"
+}

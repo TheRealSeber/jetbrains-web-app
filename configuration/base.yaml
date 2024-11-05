@@ -1,0 +1,10 @@
+database:
+  host: localhost
+  port: 5432
+  username: postgres
+  password: postgres
+  db_name: postgres
+application:
+  host: "127.0.0.1"
+  port: 8000
+  upload_path: "uploads"
